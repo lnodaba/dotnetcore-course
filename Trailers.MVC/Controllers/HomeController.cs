@@ -51,6 +51,12 @@ namespace Trailers.MVC.Controllers
                     Contact = "Yoshi Tannamuri",
                     Country = "Canada"
                 },
+                new Company()
+                {
+                    Name = "Newly Added auto",
+                    Contact = "Yoshi Tannamuri",
+                    Country = "Canada"
+                }
             };
             return View(companies);
         }
