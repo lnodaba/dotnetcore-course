@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,39 +27,31 @@ namespace Trailers.MVC.Controllers
 
         public IActionResult Companies()
         {
-            List<Company> companies = new List<Company>()
+            string ConnectionString = "Server=NODA;Database=AwesomeProject;User Id=AwesomeUser;Password=123qwe;";
+            SqlConnection connection = new SqlConnection(ConnectionString);
+
+            string commandText = "SELECT [ID] ,[Name] ,[Contact] ,[Location] FROM [Companies]";
+            SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
+
+            List<Company> companies = new List<Company>();
+
+            using (var adapter = new SqlDataAdapter(command))
             {
-                new Company()
+                var resultTable = new DataTable();
+                adapter.Fill(resultTable);
+                
+                foreach (var row in resultTable.AsEnumerable())
                 {
-                    Name = "Alfreds Futterkiste",
-                    Contact = "Maria Anders",
-                    Country = "Germany"
-                },
-                new Company()
-                {
-                    Name = "Ernst Handel",
-                    Contact = "Roland Mendel",
-                    Country = "Austria"
-                },
-                new Company()
-                {
-                    Name = "Island Trading",
-                    Contact = "Helen Bennett",
-                    Country = "UK"
-                },
-                new Company()
-                {
-                    Name = "Laughing Bacchus Winecellars",
-                    Contact = "Yoshi Tannamuri",
-                    Country = "Canada"
-                },
-                new Company()
-                {
-                    Name = "Newly Added auto",
-                    Contact = "Yoshi Tannamuri",
-                    Country = "Canada"
+                    Company company = new Company()
+                    {
+                        Name = row["Name"].ToString(),
+                        Contact = row["Contact"].ToString(),
+                        Country = row["Location"].ToString()
+                    };
+                    companies.Add(company);
                 }
-            };
+            }
+
             return View(companies);
         }
 
