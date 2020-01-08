@@ -1,0 +1,25 @@
+﻿@model List<Movie>
+@{
+    ViewData["Title"] = "Movie Trailers";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to the Companies page!</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Trailer</th>
+        </tr>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Title</td>
+                <td>
+                   <iframe src="@movie.TrailerUrl"></iframe> 
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
