@@ -15,6 +15,23 @@ namespace Trailers.MVC.Controllers
             return View();
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Movie movie)
+        {
+            ////TODO:
+            ///Step 1 - MoviesDAL peldany
+            ///Step 2 - Meghivjuk a movies add fugvenyt.
+            ///Step 3 - Letrezhozni a MoviesAdd DAL fugvenyt
+            Movie myMovie = movie;
+
+            return RedirectToAction("Index"); //this needs to redirect to the listing page
+        }
+
         public IActionResult ListMovies()
         {
             MoviesDAL dal = new MoviesDAL();

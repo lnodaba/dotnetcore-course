@@ -8,6 +8,11 @@ namespace Trailers.MVC.DAL
 {
     public class MoviesDAL
     {
+        //TODO:
+        // Create Connection string
+        // Create AddMovies function
+        // Run Query function
+
         private List<Movie> _movies = new List<Movie>()
         {
             new Movie()
@@ -52,8 +57,6 @@ namespace Trailers.MVC.DAL
             }
             return result;
         }
-
-      
 
     }
 

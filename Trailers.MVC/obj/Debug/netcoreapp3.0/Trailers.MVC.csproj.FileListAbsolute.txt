@@ -142,3 +142,4 @@ D:\Projects\DotNet Kurzus\MovieTrailers\Trailers\Trailers.MVC\bin\Debug\netcorea
 D:\Projects\DotNet Kurzus\MovieTrailers\Trailers\Trailers.MVC\bin\Debug\netcoreapp3.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 D:\Projects\DotNet Kurzus\MovieTrailers\Trailers\Trailers.MVC\obj\Debug\netcoreapp3.0\Razor\Views\Movie\Index.cshtml.g.cs
 D:\Projects\DotNet Kurzus\MovieTrailers\Trailers\Trailers.MVC\obj\Debug\netcoreapp3.0\Razor\Views\Movie\ListMovies.cshtml.g.cs
+D:\Projects\DotNet Kurzus\MovieTrailers\Trailers\Trailers.MVC\obj\Debug\netcoreapp3.0\Razor\Views\Movie\Create.cshtml.g.cs
