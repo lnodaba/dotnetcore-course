@@ -23,11 +23,9 @@ namespace Trailers.MVC.Controllers
         [HttpPost]
         public IActionResult Create(Movie movie)
         {
-            ////TODO:
-            ///Step 1 - MoviesDAL peldany
-            ///Step 2 - Meghivjuk a movies add fugvenyt.
-            ///Step 3 - Letrezhozni a MoviesAdd DAL fugvenyt
-            Movie myMovie = movie;
+            MoviesDAL dal = new MoviesDAL();
+
+            dal.AddMovie(movie);
 
             return RedirectToAction("Index"); //this needs to redirect to the listing page
         }
@@ -36,7 +34,7 @@ namespace Trailers.MVC.Controllers
         {
             MoviesDAL dal = new MoviesDAL();
 
-            List<Movie> result = dal.Search("Avenger");
+            List<Movie> result = dal.ListMovies();
             
             return View(result);
         }

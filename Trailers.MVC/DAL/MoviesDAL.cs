@@ -1,61 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Trailers.MVC.Models;
 
 namespace Trailers.MVC.DAL
-{
+{ 
     public class MoviesDAL
     {
-        //TODO:
-        // Create Connection string
-        // Create AddMovies function
-        // Run Query function
+        private string _connectionString = "Server=NODA;Database=AwesomeProject;User Id=AwesomeUser;Password=123qwe;";
 
-        private List<Movie> _movies = new List<Movie>()
+        public bool AddMovie(Movie  movie)
         {
-            new Movie()
-            {
-                ID = 1,
-                Title = "Avenagers",
-                Year = 1999,
-                Description = "Very good movie",
-                PosterUrl = "https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_SY1000_CR0,0,674,1000_AL_.jpg",
-                TrailerUrl = "https://www.youtube.com/watch?v=TcMBFSGVi1c"
-            },
-            new Movie()
-            {
-                ID = 2,
-                Title = "Avenagers2",
-                Year = 2001,
-                Description = "Very very good movie",
-                PosterUrl = "https://boygeniusreport.files.wordpress.com/2019/03/avengers-endgame-sign-2.jpg?quality=98&strip=all",
-                TrailerUrl = "https://www.youtube.com/watch?v=TcMBFSGVi1c"
-            },
-            new Movie()
-            {
-                ID = 3,
-                Title = "Avenagers3",
-                Year = 2009,
-                Description = "Very very very good movie",
-                PosterUrl = "https://playtech.ro/wp-content/uploads/2019/04/avengers-endgame-recenzie-1170x658.jpg",
-                TrailerUrl = "https://www.youtube.com/watch?v=TcMBFSGVi1c"
-            }
-        };
+            string commandText =
+                $"INSERT INTO [dbo].[Movies] ([Title],[Year],[Description],[PosterUrl],[TrailerUrl])" +
+                $"VALUES ('{movie.Title}', '{movie.Year}', '{movie.Description}','{movie.PosterUrl}','{movie.TrailerUrl}')";
 
-        public List<Movie> Search(string searchTerm)
+            int result = runQuery(commandText);
+
+            return result == 1
+                ? true : false;
+        }
+
+        private int runQuery(string commandText)
         {
-            List<Movie> result = new List<Movie>();
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
 
-            foreach (Movie movie in _movies)
+            connection.Open();
+            int result = command.ExecuteNonQuery();
+            connection.Close();
+
+            return result;
+        }
+
+        public List<Movie> ListMovies()
+        {
+            string commandText = "SELECT [ID], [Title], [Year], [Description], [PosterUrl], [TrailerUrl] FROM[dbo].[Movies]";
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
+            
+            List<Movie> movies = new List<Movie>();
+
+            using (var adapter = new SqlDataAdapter(command))
             {
-                if(movie.All().Contains(searchTerm,StringComparison.OrdinalIgnoreCase))
+                var resultTable = new DataTable();
+                adapter.Fill(resultTable);
+
+                foreach (var row in resultTable.AsEnumerable())
                 {
-                    result.Add(movie);
+                    Movie movie = new Movie()
+                    {
+                        Title = row["Title"].ToString(),
+                        Year = int.Parse(row["Year"].ToString()),
+                        Description = row["Description"].ToString(),
+                        PosterUrl = row["PosterUrl"].ToString(),
+                        TrailerUrl = row["TrailerUrl"].ToString(),
+                    };
+                    movies.Add(movie);
                 }
             }
-            return result;
+            return movies;
         }
 
     }
