@@ -34,6 +34,7 @@ namespace Trailers.MVC.DAL
             connection.Close();
 
             return result;
+
         }
 
         public bool UpdateMovie(Movie movie)
