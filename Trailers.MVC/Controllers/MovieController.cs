@@ -30,6 +30,29 @@ namespace Trailers.MVC.Controllers
             return RedirectToAction("Index"); //this needs to redirect to the listing page
         }
 
+        [HttpGet]
+        public IActionResult Update(int id)
+        {
+            MoviesDAL dal = new MoviesDAL();
+
+            Movie movie = dal.GetMovie(id);
+
+            return View(dal.GetMovie(id));
+        }
+
+        [HttpPost]
+        public IActionResult Update(Movie movie)
+        {
+            MoviesDAL dal = new MoviesDAL();
+
+            dal.UpdateMovie(movie);
+            
+            return RedirectToAction("Index"); //this needs to redirect to the listing page
+        }
+
+
+
+
         public IActionResult ListMovies()
         {
             MoviesDAL dal = new MoviesDAL();

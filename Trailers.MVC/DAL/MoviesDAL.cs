@@ -36,9 +36,28 @@ namespace Trailers.MVC.DAL
             return result;
         }
 
-        public List<Movie> ListMovies()
+        public bool UpdateMovie(Movie movie)
+        {
+            string commandText = 
+                   $" UPDATE[dbo].[Movies] " +
+                   $" SET[Title] = '{movie.Title}' " +
+                   $"     ,[Year] = {movie.Year} " +
+                   $"     ,[Description] ='{movie.Description}' " +
+                   $"     ,[PosterUrl] = '{movie.PosterUrl}' " +
+                   $"     ,[TrailerUrl] = '{movie.TrailerUrl}' " +
+                   $" WHERE ID = {movie.ID}";
+
+            int result = runQuery(commandText);
+
+            return result == 1
+                ? true : false;
+        }
+
+        public List<Movie> ListMovies(string searchParameter = "")
         {
             string commandText = "SELECT [ID], [Title], [Year], [Description], [PosterUrl], [TrailerUrl] FROM[dbo].[Movies]";
+            commandText += searchParameter;
+
             SqlConnection connection = new SqlConnection(_connectionString);
             SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
             
@@ -53,6 +72,7 @@ namespace Trailers.MVC.DAL
                 {
                     Movie movie = new Movie()
                     {
+                        ID = int.Parse(row["ID"].ToString()),
                         Title = row["Title"].ToString(),
                         Year = int.Parse(row["Year"].ToString()),
                         Description = row["Description"].ToString(),
@@ -64,6 +84,9 @@ namespace Trailers.MVC.DAL
             }
             return movies;
         }
+        public Movie GetMovie(int id) => 
+            this.ListMovies(searchParameter : $" WHERE ID = {id}")
+            .First();
 
     }
 

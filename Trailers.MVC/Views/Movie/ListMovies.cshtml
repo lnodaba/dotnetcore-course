@@ -10,13 +10,19 @@
         <tr>
             <th>Title</th>
             <th>Trailer</th>
+            <th>Operation</th>
         </tr>
         @foreach (var movie in Model)
         {
+            
             <tr>
                 <td>@movie.Title</td>
                 <td>
                    <iframe src="@movie.TrailerUrl"></iframe> 
+                </td>
+                <td>
+                    @Html.ActionLink("Update", "Update", "Movie", new { id = movie.ID }, null)
+                    @Html.ActionLink("Delete", "Delete", "Movie", new { id = movie.ID }, null)
                 </td>
             </tr>
         }
