@@ -13,7 +13,6 @@ namespace Movies.Tests
         {
             //Arrange
             MoviesDAL dal = new MoviesDAL();
-
             Movie movie = new Movie();
 
             movie.Title = "Fast and Furious 100";
@@ -37,7 +36,7 @@ namespace Movies.Tests
 
             //Act
             List<Movie> movies = dal.ListMovies();
-
+            
             //Assert
             Assert.True(movies.Count > 0);
         }

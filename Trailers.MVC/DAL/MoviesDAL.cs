@@ -23,20 +23,6 @@ namespace Trailers.MVC.DAL
             return result == 1
                 ? true : false;
         }
-
-        private int runQuery(string commandText)
-        {
-            SqlConnection connection = new SqlConnection(_connectionString);
-            SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
-
-            connection.Open();
-            int result = command.ExecuteNonQuery();
-            connection.Close();
-
-            return result;
-
-        }
-
         public bool UpdateMovie(Movie movie)
         {
             string commandText = 
@@ -53,7 +39,6 @@ namespace Trailers.MVC.DAL
             return result == 1
                 ? true : false;
         }
-
         public List<Movie> ListMovies(string searchParameter = "")
         {
             string commandText = "SELECT [ID], [Title], [Year], [Description], [PosterUrl], [TrailerUrl] FROM[dbo].[Movies]";
@@ -88,6 +73,19 @@ namespace Trailers.MVC.DAL
         public Movie GetMovie(int id) => 
             this.ListMovies(searchParameter : $" WHERE ID = {id}")
             .First();
+
+        private int runQuery(string commandText)
+        {
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
+
+            connection.Open();
+            int result = command.ExecuteNonQuery();
+            connection.Close();
+
+            return result;
+
+        }
 
     }
 
