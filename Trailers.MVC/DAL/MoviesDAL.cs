@@ -16,9 +16,18 @@ namespace Trailers.MVC.DAL
         {
             string commandText =
                 $"INSERT INTO [dbo].[Movies] ([Title],[Year],[Description],[PosterUrl],[TrailerUrl])" +
-                $"VALUES ('{movie.Title}', '{movie.Year}', '{movie.Description}','{movie.PosterUrl}','{movie.TrailerUrl}')";
+                $"VALUES (@Title, @Year, @Description, @PosterUrl, @TrailerUrl)";
 
-            int result = runQuery(commandText);
+            List<SqlParameter> parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("Title",movie.Title),
+                new SqlParameter("Year",movie.Year),
+                new SqlParameter("Description",movie.Description),
+                new SqlParameter("PosterUrl",movie.PosterUrl ?? string.Empty),
+                new SqlParameter("TrailerUrl",movie.TrailerUrl ?? string.Empty) ,
+            };
+
+            int result = runQuery(commandText, parameters);
 
             return result == 1
                 ? true : false;
@@ -27,14 +36,24 @@ namespace Trailers.MVC.DAL
         {
             string commandText = 
                    $" UPDATE[dbo].[Movies] " +
-                   $" SET[Title] = '{movie.Title}' " +
-                   $"     ,[Year] = {movie.Year} " +
-                   $"     ,[Description] ='{movie.Description}' " +
-                   $"     ,[PosterUrl] = '{movie.PosterUrl}' " +
-                   $"     ,[TrailerUrl] = '{movie.TrailerUrl}' " +
-                   $" WHERE ID = {movie.ID}";
+                   $" SET [Title] = @Title " +
+                   $"     ,[Year] = @Year " +
+                   $"     ,[Description] = @Description " +
+                   $"     ,[PosterUrl] = @PosterUrl  " +
+                   $"     ,[TrailerUrl] = @TrailerUrl " +
+                   $" WHERE ID = @ID ";
 
-            int result = runQuery(commandText);
+            List<SqlParameter> parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("Title",movie.Title),
+                new SqlParameter("Year",movie.Year),
+                new SqlParameter("Description",movie.Description),
+                new SqlParameter("PosterUrl",movie.PosterUrl ?? string.Empty),
+                new SqlParameter("TrailerUrl",movie.TrailerUrl ?? string.Empty),
+                new SqlParameter("ID",movie.ID)
+            };
+
+            int result = runQuery(commandText, parameters);
 
             return result == 1
                 ? true : false;
@@ -76,15 +95,33 @@ namespace Trailers.MVC.DAL
 
         private int runQuery(string commandText)
         {
+            return runQuery(commandText, new List<SqlParameter>());
+        }
+
+        private int runQuery(string commandText, List<SqlParameter> parameters)
+        {
             SqlConnection connection = new SqlConnection(_connectionString);
             SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
-
+            
+            parameters.ForEach(parameter => command.Parameters.Add(parameter));
+            
             connection.Open();
             int result = command.ExecuteNonQuery();
             connection.Close();
 
             return result;
 
+        }
+
+        public bool DeleteMovie(Movie movie)
+        {
+            string commandText =
+                   $" DELETE FROM [dbo].[Movies] WHERE ID = {movie.ID}";
+
+            int result = runQuery(commandText);
+
+            return result == 1
+                ? true : false;
         }
 
     }

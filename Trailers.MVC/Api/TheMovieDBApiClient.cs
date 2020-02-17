@@ -33,7 +33,8 @@ namespace Trailers.MVC.Api
             foreach (var movieItem in searchResult.results.ToList())
             {
                 var date = DateTime.Now;
-                if (movieItem.release_date.Length > 0)
+                
+                if (movieItem.release_date?.Length > 0)
                 {
                     date = DateTime.Parse(movieItem.release_date);
                 }

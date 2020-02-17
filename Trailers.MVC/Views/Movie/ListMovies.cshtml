@@ -4,8 +4,9 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to the Companies page!</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Welcome to the movies listing page!</h1>
+    <p>Import movies from the Movie DB API @Html.ActionLink("Import", "Import", "Movie").</p>
+    
     <table>
         <tr>
             <th>Title</th>
@@ -14,11 +15,12 @@
         </tr>
         @foreach (var movie in Model)
         {
-            
+
             <tr>
                 <td>@movie.Title</td>
                 <td>
-                   <iframe src="@movie.TrailerUrl"></iframe> 
+                    <imgs style="width:300px;height:450px;" src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/@movie.PosterUrl.Replace("/","")" />
+                   @*<iframe src="@movie.TrailerUrl"></iframe>*@ 
                 </td>
                 <td>
                     @Html.ActionLink("Update", "Update", "Movie", new { id = movie.ID }, null)
