@@ -3,31 +3,23 @@
     ViewData["Title"] = "Movie Trailers";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to the movies listing page!</h1>
-    <p>Import movies from the Movie DB API @Html.ActionLink("Import", "Import", "Movie").</p>
-    
-    <table>
-        <tr>
-            <th>Title</th>
-            <th>Trailer</th>
-            <th>Operation</th>
-        </tr>
-        @foreach (var movie in Model)
-        {
+    <div class="text-center">
+        <h1 class="display-4">Welcome to the movies listing page!</h1>
+        <p>Import movies from the Movie DB API @Html.ActionLink("Import", "Import", "Movie").</p>
+        <div class="container">
+            <div class="row">
+                @foreach (var movie in Model)
+                {
+                    <div class="col-sm">
+                        <a href="/Movie/Details/@movie.ID">
+                            <img style="width:300px;height:450px; margin-bottom: 10px;" src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/@movie?.PosterUrl.Replace("/","")" />
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+   
+@*@Html.ActionLink("Update", "Update", "Movie", new { id = movie.ID }, null)
+@Html.ActionLink("Delete", "Delete", "Movie", new { id = movie.ID }, null)*@
 
-            <tr>
-                <td>@movie.Title</td>
-                <td>
-                    <imgs style="width:300px;height:450px;" src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/@movie.PosterUrl.Replace("/","")" />
-                   @*<iframe src="@movie.TrailerUrl"></iframe>*@ 
-                </td>
-                <td>
-                    @Html.ActionLink("Update", "Update", "Movie", new { id = movie.ID }, null)
-                    @Html.ActionLink("Delete", "Delete", "Movie", new { id = movie.ID }, null)
-                </td>
-            </tr>
-        }
-
-    </table>
-</div>

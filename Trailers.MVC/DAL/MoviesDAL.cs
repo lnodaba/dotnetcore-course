@@ -15,8 +15,8 @@ namespace Trailers.MVC.DAL
         public bool AddMovie(Movie  movie)
         {
             string commandText =
-                $"INSERT INTO [dbo].[Movies] ([Title],[Year],[Description],[PosterUrl],[TrailerUrl])" +
-                $"VALUES (@Title, @Year, @Description, @PosterUrl, @TrailerUrl)";
+                $"INSERT INTO [dbo].[Movies] ([Title],[Year],[Description],[PosterUrl],[TrailerUrl], [ApiID])" +
+                $"VALUES (@Title, @Year, @Description, @PosterUrl, @TrailerUrl, @ApiID)";
 
             List<SqlParameter> parameters = new List<SqlParameter>()
             {
@@ -25,6 +25,7 @@ namespace Trailers.MVC.DAL
                 new SqlParameter("Description",movie.Description),
                 new SqlParameter("PosterUrl",movie.PosterUrl ?? string.Empty),
                 new SqlParameter("TrailerUrl",movie.TrailerUrl ?? string.Empty) ,
+                new SqlParameter("ApiID",movie.ApiID)
             };
 
             int result = runQuery(commandText, parameters);

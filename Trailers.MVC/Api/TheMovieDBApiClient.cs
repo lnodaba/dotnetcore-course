@@ -24,6 +24,14 @@ namespace Trailers.MVC.Api
 
             return searchResultToMovies(jsonString);
         }
+        public ApiVideosResult GetVideos(int apiID)
+        {
+            string queryUrl = getVideoQuery(apiID);
+
+            string jsonString = runGetRequest(queryUrl);
+
+            return JsonSerializer.Deserialize<ApiVideosResult>(jsonString);
+        }
 
         private static List<Movie> searchResultToMovies(string jsonString)
         {
@@ -44,7 +52,8 @@ namespace Trailers.MVC.Api
                     Title = movieItem.title,
                     Description = movieItem.overview,
                     PosterUrl = movieItem.poster_path,
-                    Year = date.Year
+                    Year = date.Year,
+                    ApiID = movieItem.id
                 });
             }
 
@@ -75,5 +84,9 @@ namespace Trailers.MVC.Api
                         $"?api_key={_apiKey}" +
                         $"&query={query}" +
                        _defaultParameters;
+
+        private string getVideoQuery(int apiID) => _apiEndpoint + $"/movie/{apiID}/credits" +
+                $"?api_key={_apiKey}";
+
     }
 }

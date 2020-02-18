@@ -13,6 +13,8 @@ namespace Trailers.MVC.Models
         public string TrailerUrl{ get; set; }
         public string PosterUrl { get; set; }
         public int Year { get; set; }
+        public int ApiID { get; set; }
+
 
         public string All()
         {

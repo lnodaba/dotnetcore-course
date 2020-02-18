@@ -31,6 +31,33 @@ namespace Trailers.MVC.Controllers
             return RedirectToAction("Index"); //this needs to redirect to the listing page
         }
 
+        public IActionResult Details(int id)
+        {
+            MoviesDAL dal = new MoviesDAL();
+
+            Movie movie = dal.GetMovie(id);
+
+            return View(dal.GetMovie(id));
+
+            //TODO:
+            // There are 2 endpoints to implement
+            // For credits: https://api.themoviedb.org/3/movie/112679/credits?api_key=2bdd3c7cd3b1a0d237f5986e5418e4eb
+            // For Videos: https://api.themoviedb.org/3/movie/1930/videos?api_key=2bdd3c7cd3b1a0d237f5986e5418e4eb&language=en-US
+            // Implement 2 public methods on the MovieDBApi client.
+            /*
+             * Create the classes needed with this technique:
+             * https://www.c-sharpcorner.com/article/how-to-paste-json-as-classes-or-xml-as-classes-in-visual-stu/
+             * 
+             * Create a new Class name it MovieDetail Model
+             * and add the movie itself the credits and the videos it
+             *  
+             *  Create an instance here in the details action and return that to the view.
+             *  
+             *  Chage the movie details view's Model to MovieDetailsViewModel
+             *  and thn change the UI.
+             */
+        }
+
         [HttpGet]
         public IActionResult Update(int id)
         {
