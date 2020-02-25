@@ -61,7 +61,7 @@ namespace Trailers.MVC.DAL
         }
         public List<Movie> ListMovies(string searchParameter = "")
         {
-            string commandText = "SELECT [ID], [Title], [Year], [Description], [PosterUrl], [TrailerUrl] FROM[dbo].[Movies]";
+            string commandText = "SELECT [ID], [Title], [Year], [Description], [PosterUrl], [TrailerUrl], [ApiID] FROM[dbo].[Movies]";
             commandText += searchParameter;
 
             SqlConnection connection = new SqlConnection(_connectionString);
@@ -84,6 +84,8 @@ namespace Trailers.MVC.DAL
                         Description = row["Description"].ToString(),
                         PosterUrl = row["PosterUrl"].ToString(),
                         TrailerUrl = row["TrailerUrl"].ToString(),
+                        ApiID = int.Parse(row["ApiID"].ToString())
+                        
                     };
                     movies.Add(movie);
                 }

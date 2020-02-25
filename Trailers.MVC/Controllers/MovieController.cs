@@ -11,119 +11,72 @@ namespace Trailers.MVC.Controllers
 {
     public class MovieController : Controller
     {
-        public IActionResult Index()
+        private MoviesDAL _dal;
+        private TheMovieDBApiClient _api;
+
+        public MovieController()
         {
-            return View();
+            _dal = new MoviesDAL();
+            _api = new TheMovieDBApiClient();
         }
 
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
+
+        public IActionResult ListMovies() => View(_dal.ListMovies());
+
+        public IActionResult Create() => View();
 
         [HttpPost]
         public IActionResult Create(Movie movie)
         {
-            MoviesDAL dal = new MoviesDAL();
+            _dal.AddMovie(movie);
 
-            dal.AddMovie(movie);
-
-            return RedirectToAction("Index"); //this needs to redirect to the listing page
+            return RedirectToAction("Index");
         }
 
         public IActionResult Details(int id)
         {
-            MoviesDAL dal = new MoviesDAL();
+            Movie movie = _dal.GetMovie(id);
 
-            Movie movie = dal.GetMovie(id);
-
-            return View(dal.GetMovie(id));
-
-            //TODO:
-            // There are 2 endpoints to implement
-            // For credits: https://api.themoviedb.org/3/movie/112679/credits?api_key=2bdd3c7cd3b1a0d237f5986e5418e4eb
-            // For Videos: https://api.themoviedb.org/3/movie/1930/videos?api_key=2bdd3c7cd3b1a0d237f5986e5418e4eb&language=en-US
-            // Implement 2 public methods on the MovieDBApi client.
-            /*
-             * Create the classes needed with this technique:
-             * https://www.c-sharpcorner.com/article/how-to-paste-json-as-classes-or-xml-as-classes-in-visual-stu/
-             * 
-             * Create a new Class name it MovieDetail Model
-             * and add the movie itself the credits and the videos it
-             *  
-             *  Create an instance here in the details action and return that to the view.
-             *  
-             *  Chage the movie details view's Model to MovieDetailsViewModel
-             *  and thn change the UI.
-             */
-        }
+            return View(new MovieDetailsViewModel()
+            {
+                movie = movie,
+                credits = _api.GetCredits(movie.ApiID),
+                videos = _api.GetVideos(movie.ApiID)
+            });
+        } 
 
         [HttpGet]
-        public IActionResult Update(int id)
-        {
-            MoviesDAL dal = new MoviesDAL();
-
-            Movie movie = dal.GetMovie(id);
-
-            return View(dal.GetMovie(id));
-        }
+        public IActionResult Update(int id) => View(_dal.GetMovie(id));
 
         [HttpPost]
         public IActionResult Update(Movie movie)
         {
-            MoviesDAL dal = new MoviesDAL();
-
-            dal.UpdateMovie(movie);
+            _dal.UpdateMovie(movie);
             
-            return RedirectToAction("Index"); //this needs to redirect to the listing page
-        }
-
-
-
-
-        public IActionResult ListMovies()
-        {
-            MoviesDAL dal = new MoviesDAL();
-
-            List<Movie> result = dal.ListMovies();
-            
-            return View(result);
+            return RedirectToAction("Index");
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
-        {
-            MoviesDAL dal = new MoviesDAL();
-
-            Movie movie = dal.GetMovie(id);
-
-            return View(dal.GetMovie(id));
-        }
+        public IActionResult Delete(int id) => View(_dal.GetMovie(id));
 
         [HttpPost]
         public IActionResult Delete(Movie movie)
         {
-            MoviesDAL dal = new MoviesDAL();
-
-            dal.DeleteMovie(movie);
+            _dal.DeleteMovie(movie);
 
             return RedirectToAction("ListMovies");
         }
-        public IActionResult Import()
-        {
-            return View();
-        }
+
+        public IActionResult Import() => View();
 
         [HttpPost]
         public IActionResult Import(string searchTerm)
         {
-            TheMovieDBApiClient api = new TheMovieDBApiClient();
-            List<Movie> movies = api.Search(searchTerm);
-
-            MoviesDAL dal = new MoviesDAL();
+            List<Movie> movies = _api.Search(searchTerm);
             foreach (Movie movie in movies)
             {
-                dal.AddMovie(movie);
+                _dal.AddMovie(movie);
             }
 
             return RedirectToAction("ListMovies");
