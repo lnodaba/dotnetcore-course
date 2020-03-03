@@ -1,0 +1,31 @@
+﻿@model List<Movie>
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<form asp-action="Search" style="padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-3">
+            <label class="control-label">Search term</label>
+        </div>
+        <div class="col-6">
+            <input type="text" name="searchTerm" class="form-control" />
+        </div>
+        <div class="col-3 ">
+            <input id="searchButton" type="submit" value="Confirm" class="form-control bg-success" />
+        </div>
+    </div>
+</form>
+
+<div id="movies" class="container">
+    <div class="row">
+        @foreach (var movie in Model)
+        {
+            <div class="col-sm">
+                <a href="/Movie/Details/@movie.ID">
+                    <img style="width:300px;height:450px; margin-bottom: 10px;" src="https://image.tmdb.org/t/p/w300_and_h450_bestv2/@movie?.PosterUrl?.Replace("/","")" />
+                </a>
+            </div>
+        }
+    </div>
+</div>

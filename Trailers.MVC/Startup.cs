@@ -44,6 +44,7 @@ namespace Trailers.MVC
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -51,6 +52,7 @@ namespace Trailers.MVC
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Movie}/{action=ListMovies}/{id?}");
+                endpoints.MapRazorPages();
             });
         }
     }

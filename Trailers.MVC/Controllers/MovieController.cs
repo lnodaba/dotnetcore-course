@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Trailers.MVC.Api;
 using Trailers.MVC.DAL;
@@ -9,6 +10,7 @@ using Trailers.MVC.Models;
 
 namespace Trailers.MVC.Controllers
 {
+    [Authorize]
     public class MovieController : Controller
     {
         private MoviesDAL _dal;
@@ -80,6 +82,16 @@ namespace Trailers.MVC.Controllers
             }
 
             return RedirectToAction("ListMovies");
+        }
+
+        public IActionResult Search() => View(new List<Movie>());
+
+        [HttpPost]
+        public IActionResult Search(string searchTerm) 
+        {
+            List<Movie> movies = _api.Search(searchTerm);
+
+            return View(movies);
         }
     }
 
