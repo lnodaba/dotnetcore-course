@@ -10,6 +10,19 @@ namespace Movies.Tests
     public class TheMovieDBApiClientTests
     {
         [Fact]
+        public void TestMarkAsFavorite()
+        {
+            //Arrange
+            TheMovieDBApiClient client = new TheMovieDBApiClient();
+
+            //Act
+            var result = client.MarkAsFavorite(550,"movie");
+
+            //Assert
+            Assert.True(result);
+        }
+
+        [Fact]
         public void TestSearch()
         {
             //Arrange

@@ -92,6 +92,12 @@ namespace Trailers.MVC.DAL
             }
             return movies;
         }
+
+        internal Movie GetMovieByApiId(int apiID)
+        {
+            throw new NotImplementedException();
+        }
+
         public Movie GetMovie(int id) => 
             this.ListMovies(searchParameter : $" WHERE ID = {id}")
             .First();

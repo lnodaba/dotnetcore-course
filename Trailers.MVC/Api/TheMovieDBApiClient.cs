@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Trailers.MVC.Models;
@@ -15,6 +16,23 @@ namespace Trailers.MVC.Api
         private string _defaultParameters = "&language=en-US&page=1&include_adult=false";
 
         private HttpClient _client = new HttpClient();
+
+
+        public bool MarkAsFavorite(int MovieApiId)
+        {
+            string queryUrl = _apiEndpoint + "/account/3/favorite" +
+                       "?api_key=b3ec4a9ec89b8292324a5bcb560d0713" +
+                       "&session_id=b5492e15be1a68284a35e5844f3e06bd6a098f35";
+            
+            var body = $"{{ \"media_type\" : \"movie\", \"media_id\": {MovieApiId}, \"favorite\": true }}";
+
+            var response = _client.PostAsync(queryUrl, new StringContent(body, Encoding.UTF8, "application/json"))
+                .GetAwaiter().GetResult();
+            
+            string jsonString = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+
+            return false;
+        }
 
         public List<Movie> Search(string query)
         {
@@ -80,6 +98,11 @@ namespace Trailers.MVC.Api
                     Year = x.release_date.Length > 0 
                             ? DateTime.Parse(x.release_date).Year : DateTime.Now.Year
                 }).ToList();
+
+        internal List<Movie> SearchWithActor(string searchTerm)
+        {
+            throw new NotImplementedException();
+        }
 
         private string runGetRequest(string queryUrl)
         {

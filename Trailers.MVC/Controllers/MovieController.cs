@@ -46,7 +46,7 @@ namespace Trailers.MVC.Controllers
                 credits = _api.GetCredits(movie.ApiID),
                 videos = _api.GetVideos(movie.ApiID)
             });
-        } 
+        }
 
         [HttpGet]
         public IActionResult Update(int id) => View(_dal.GetMovie(id));
@@ -55,7 +55,7 @@ namespace Trailers.MVC.Controllers
         public IActionResult Update(Movie movie)
         {
             _dal.UpdateMovie(movie);
-            
+
             return RedirectToAction("Index");
         }
 
@@ -87,12 +87,46 @@ namespace Trailers.MVC.Controllers
         public IActionResult Search() => View(new List<Movie>());
 
         [HttpPost]
-        public IActionResult Search(string searchTerm) 
+        public IActionResult Search(string searchTerm)
         {
             List<Movie> movies = _api.Search(searchTerm);
 
             return View(movies);
         }
+
+        [HttpPost]
+        public IActionResult SearchWithActor(string searchTerm)
+        {
+            if (searchTerm == null)
+            {
+                return View(new List<Movie>());
+            }
+
+            List<Movie> apiMovies = _api.SearchWithActor(searchTerm);
+            for (int i = 0; i < apiMovies.Count; i++)
+            {
+                var exists = movieExists(apiMovies[i]);
+                if (!exists)
+                {
+                    _dal.AddMovie(apiMovies[i]);
+                }
+
+                apiMovies[i] = _dal.GetMovieByApiId(apiMovies[i].ApiID);
+            }
+
+            return View(apiMovies);
+        }
+
+        private bool movieExists(Movie currentMovie)
+        {
+            var result = _dal.GetMovieByApiId(currentMovie.ApiID);
+            if (result != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 
 }
