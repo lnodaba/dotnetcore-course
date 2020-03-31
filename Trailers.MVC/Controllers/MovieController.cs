@@ -70,6 +70,22 @@ namespace Trailers.MVC.Controllers
             return RedirectToAction("ListMovies");
         }
 
+        [HttpPost]
+        public IActionResult DeleteMovie(int id)
+        {
+            try
+            {
+                _dal.DeleteMovieById(id);
+
+                return Ok(1);
+            }
+            catch (Exception)
+            {
+                return Ok(0);
+            }
+           
+        }
+
         public IActionResult Import() => View();
 
         [HttpPost]

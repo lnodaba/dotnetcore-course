@@ -33,6 +33,29 @@ $(document).ready(function () {
     });
 
 
+    $(document).on("click", ".delete-movie", function () {
+        var element = $(this);
+        var id = element.attr("id");
+
+        
+
+        $.post("Movie/DeleteMovie/" + id, function (data) {
+            if (data === 1) {
+                console.log("Post Finished");
+                element.parent().remove();
+            } else {
+                alert("Something went wrong!");
+            }
+        });
+
+
+
+
+        console.log("Click function Finished");
+    });
+
+    
+
 
 
     //$(document).on("click", "#searchButton", function (event) {

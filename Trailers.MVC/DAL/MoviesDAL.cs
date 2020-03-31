@@ -59,6 +59,7 @@ namespace Trailers.MVC.DAL
             return result == 1
                 ? true : false;
         }
+
         public List<Movie> ListMovies(string searchParameter = "")
         {
             string commandText = "SELECT [ID], [Title], [Year], [Description], [PosterUrl], [TrailerUrl], [ApiID] FROM[dbo].[Movies]";
@@ -124,15 +125,19 @@ namespace Trailers.MVC.DAL
 
         public bool DeleteMovie(Movie movie)
         {
+            return DeleteMovieById(movie.ID);
+        }
+
+        public bool DeleteMovieById(int id)
+        {
             string commandText =
-                   $" DELETE FROM [dbo].[Movies] WHERE ID = {movie.ID}";
+                               $" DELETE FROM [dbo].[Movies] WHERE ID = {id}";
 
             int result = runQuery(commandText);
 
             return result == 1
                 ? true : false;
         }
-
     }
 
 }
