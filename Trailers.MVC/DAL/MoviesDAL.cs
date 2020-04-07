@@ -60,6 +60,27 @@ namespace Trailers.MVC.DAL
                 ? true : false;
         }
 
+        public void ToggleFavorite(int movieId, string email)
+        {
+            string commandText = " IF(EXISTS(SELECT * FROM Favorites WHERE Email = @email AND MovieId = @movieId)) " +
+                                " BEGIN                                                                           " +
+                                "     DELETE FROM[dbo].[Favorites] WHERE Email = @email AND MovieId = @movieId    " +
+                                " END                                                                             " +
+                                " ELSE                                                                            " +
+                                " BEGIN                                                                           " +
+                                "     INSERT INTO[dbo].[Favorites]([MovieId],[Email]) VALUES(@movieId, @email)    " +
+                                " END                                                                             ";
+
+
+            List<SqlParameter> parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("MovieId",movieId),
+                new SqlParameter("Email",email),
+            };
+
+            runQuery(commandText, parameters);
+        }
+
         public List<Movie> ListMovies(string searchParameter = "")
         {
             string commandText = "SELECT [ID], [Title], [Year], [Description], [PosterUrl], [TrailerUrl], [ApiID] FROM[dbo].[Movies]";
@@ -86,7 +107,6 @@ namespace Trailers.MVC.DAL
                         PosterUrl = row["PosterUrl"].ToString(),
                         TrailerUrl = row["TrailerUrl"].ToString(),
                         ApiID = int.Parse(row["ApiID"].ToString())
-                        
                     };
                     movies.Add(movie);
                 }

@@ -65,3 +65,34 @@ $(document).ready(function () {
     //    $("#movies").html("A filmek ide jonnek a " + searchTerm +  "kereses alapjan");
     //});
 });
+
+
+
+$(".star").click(function () {
+    var id = $(this).attr("id");
+    var movieId = id.split('-')[1];
+    var selector = "#" + id;
+
+    var animation_end = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+
+    $(selector).find('.star-svg').toggleClass('favourite');
+
+    $(selector).find('.spark').toggleClass("explode")
+        .one(animation_end, function () {
+            $(selector).find('.spark').removeClass("explode");
+        });
+
+    $(selector).find('.svg-star').toggleClass("pop")
+        .one(animation_end, function () {
+            $(selector).find('.svg-star').removeClass("pop");
+        });
+
+    var isFavorite = $(selector).find('.star-svg').hasClass("favourite");
+
+    $.post("Movie/Favorite/" + movieId, function (data) {
+        if (data === 0) {
+            alert("Something went wrong!");
+        }
+    });
+
+});

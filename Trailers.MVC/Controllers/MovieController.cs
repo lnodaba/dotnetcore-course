@@ -86,6 +86,24 @@ namespace Trailers.MVC.Controllers
            
         }
 
+        [HttpPost]
+        public IActionResult Favorite(int id)
+        {
+            try
+            {
+                var email = HttpContext.User.Identity.Name;
+                _dal.ToggleFavorite(id,email);
+
+                return Ok(1);
+            }
+            catch (Exception)
+            {
+                return Ok(0);
+            }
+
+        }
+
+
         public IActionResult Import() => View();
 
         [HttpPost]

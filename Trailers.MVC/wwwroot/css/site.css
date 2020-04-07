@@ -69,3 +69,110 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+
+/* Favorite Star Styles
+-------------------------------------------------- */
+
+.star-container {
+    height: 12%;
+    width: 3%;
+    background-color: #540D6E;
+    position:    absolute;
+}
+
+.star {
+    position: absolute;
+    top: -3%;
+    right: 23px;
+}
+
+.svg-star {
+    width: 80px;
+}
+
+.pop {
+    -webkit-animation: pop .2s ease;
+    animation: pop .2s forwards;
+}
+
+.star-svg {
+    stroke: #FFD23F;
+    stroke-width: 2;
+}
+
+.favourite {
+    fill: #FFD23F
+}
+
+.explode {
+    fill: #FFD23F;
+    -webkit-animation: explode .2s ease;
+    animation: explode .2s ease;
+    -webkit-animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes pop {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+
+    50% {
+        -webkit-transform: scale3d(.9, .9, .9);
+        transform: scale3d(.9, .9, .9);
+    }
+
+    100% {
+        -webkit-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+}
+
+@keyframes pop {
+    0% {
+        -webkit-transform: scale3d(1, 1, 1);
+        -ms-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+
+    50% {
+        -webkit-transform: scale3d(.9, .9, .9);
+        -ms-transform: scale3d(.9, .9, .9);
+        transform: scale3d(.9, .9, .9);
+    }
+
+    100% {
+        -webkit-transform: scale3d(1, 1, 1);
+        -ms-transform: scale3d(1, 1, 1);
+        transform: scale3d(1, 1, 1)
+    }
+}
+
+@keyframes explode {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes explode {
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
