@@ -23,6 +23,15 @@ $(document).ready(function () {
     //    $('#counter').html(parseInt(currnetCount) - 1);
     //});
 
+
+
+    //$(document).on("click", "#searchButton", function (event) {
+    //    event.preventDefault();
+
+    //    var searchTerm = $('input[name="searchTerm"]').val();
+    //    $("#movies").html("A filmek ide jonnek a " + searchTerm +  "kereses alapjan");
+    //});
+
     $(document).on("click", ".counter-button", function () {
         var valueToAdd = 1;
         if ($(this).attr('id') === "minus-button") {
@@ -48,23 +57,19 @@ $(document).ready(function () {
             }
         });
 
-
-
-
         console.log("Click function Finished");
     });
 
     
+    $.get("Movie/GetFavorites", function (data) {
+        data.forEach(function (movieId) {
+            var selector = "#star-" + movieId;
+            $(selector).find('.star-svg').toggleClass('favourite');
+        });
+    });
 
-
-
-    //$(document).on("click", "#searchButton", function (event) {
-    //    event.preventDefault();
-
-    //    var searchTerm = $('input[name="searchTerm"]').val();
-    //    $("#movies").html("A filmek ide jonnek a " + searchTerm +  "kereses alapjan");
-    //});
 });
+
 
 
 
@@ -94,5 +99,6 @@ $(".star").click(function () {
             alert("Something went wrong!");
         }
     });
+
 
 });

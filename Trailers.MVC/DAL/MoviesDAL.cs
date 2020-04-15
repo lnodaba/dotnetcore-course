@@ -33,6 +33,35 @@ namespace Trailers.MVC.DAL
             return result == 1
                 ? true : false;
         }
+
+        public List<int> GetFavorites(string email)
+        {
+            string commandText = "SELECT [MovieId] FROM[Favorites] WHERE Email = @Email ";
+
+            List<SqlParameter> parameters = new List<SqlParameter>()
+            {
+                new SqlParameter("Email",email),
+            };
+
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
+            parameters.ForEach(parameter => command.Parameters.Add(parameter));
+
+            List<int> movieIds = new List<int>();
+
+            using (var adapter = new SqlDataAdapter(command))
+            {
+                var resultTable = new DataTable();
+                adapter.Fill(resultTable);
+
+                foreach (var row in resultTable.AsEnumerable())
+                {
+                    movieIds.Add(int.Parse(row["MovieId"].ToString()));
+                }
+            }
+            return movieIds;
+        }
+
         public bool UpdateMovie(Movie movie)
         {
             string commandText = 
@@ -81,14 +110,31 @@ namespace Trailers.MVC.DAL
             runQuery(commandText, parameters);
         }
 
-        public List<Movie> ListMovies(string searchParameter = "")
+        public List<Movie> ListMovies(string searchParameter = "", string email = "")
         {
-            string commandText = "SELECT [ID], [Title], [Year], [Description], [PosterUrl], [TrailerUrl], [ApiID] FROM[dbo].[Movies]";
+            string commandText = "SELECT Movies.[ID]                        " +
+                                    "     ,[Title]                              " +
+                                    "     ,[Year]                               " +
+                                    "     ,[Description]                        " +
+                                    "     ,[PosterUrl]                          " +
+                                    "     ,[TrailerUrl]                         " +
+                                    "     ,[ApiID]                              " +
+                                    "     , CASE                                " +
+                                    "         WHEN Favorites.MovieId IS NOT NULL" +
+                                    "             THEN 'True'                   " +
+                                    "         ELSE 'False'                      " +
+                                    "         END AS IsFavorite                 " +
+                                    " FROM Movies                               " +
+                                    " LEFT JOIN Favorites                       " +
+                                    "     ON Movies.ID = Favorites.MovieId      " +
+                                    "         AND Favorites.Email = @Email;     ";
+
             commandText += searchParameter;
 
             SqlConnection connection = new SqlConnection(_connectionString);
             SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
-            
+            command.Parameters.Add(new SqlParameter("Email", email));
+
             List<Movie> movies = new List<Movie>();
 
             using (var adapter = new SqlDataAdapter(command))
@@ -106,7 +152,8 @@ namespace Trailers.MVC.DAL
                         Description = row["Description"].ToString(),
                         PosterUrl = row["PosterUrl"].ToString(),
                         TrailerUrl = row["TrailerUrl"].ToString(),
-                        ApiID = int.Parse(row["ApiID"].ToString())
+                        ApiID = int.Parse(row["ApiID"].ToString()),
+                        //IsFavorite = bool.Parse(row["IsFavorite"].ToString())
                     };
                     movies.Add(movie);
                 }

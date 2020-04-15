@@ -24,7 +24,26 @@ namespace Trailers.MVC.Controllers
 
         public IActionResult Index() => View();
 
-        public IActionResult ListMovies() => View(_dal.ListMovies());
+        public IActionResult ListMovies()
+        {
+            var email = HttpContext.User.Identity.Name;
+            var movies = _dal.ListMovies("",email);
+            
+            //var favorites = _dal.GetFavorites(email);
+
+            //foreach (var movieId in favorites)
+            //{
+            //    for (int i = 0; i < movies.Count; i++)
+            //    {
+            //        if (movies[i].ID == movieId)
+            //        {
+            //            movies[i].IsFavorite = true;
+            //        }
+            //    }
+            //}
+
+            return View(movies);
+        } 
 
         public IActionResult Create() => View();
 
@@ -103,6 +122,12 @@ namespace Trailers.MVC.Controllers
 
         }
 
+        [HttpGet]
+        public List<int> GetFavorites()
+        {
+            var email = HttpContext.User.Identity.Name;
+            return _dal.GetFavorites(email);
+        }
 
         public IActionResult Import() => View();
 

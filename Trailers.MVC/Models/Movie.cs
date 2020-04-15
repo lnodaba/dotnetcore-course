@@ -14,6 +14,8 @@ namespace Trailers.MVC.Models
         public string PosterUrl { get; set; }
         public int Year { get; set; }
         public int ApiID { get; set; }
+        public bool IsFavorite { get; set; }
+
 
 
         public string All()
