@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Trailers.MVC.Api;
 using Trailers.MVC.DAL;
 using Trailers.MVC.Models;
@@ -16,9 +17,9 @@ namespace Trailers.MVC.Controllers
         private MoviesDAL _dal;
         private TheMovieDBApiClient _api;
 
-        public MovieController()
+        public MovieController(IConfiguration configuration)
         {
-            _dal = new MoviesDAL();
+            _dal = new MoviesDAL(configuration.GetConnectionString("UsersContextConnection"));
             _api = new TheMovieDBApiClient();
         }
 
@@ -184,6 +185,13 @@ namespace Trailers.MVC.Controllers
                 return true;
             }
             return false;
+        }
+
+        public IActionResult Graphs()
+        {
+            var dataPoints = _dal.GetDataPoints();
+
+            return View(dataPoints);
         }
 
     }

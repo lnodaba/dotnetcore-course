@@ -1,0 +1,39 @@
+﻿@model List<DataPoint>
+@{
+	ViewData["Title"] = "Awesome Graphs page";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+	window.onload = function () {
+
+        var dataPoints =  @Html.Raw(Json.Serialize(@Model));
+
+		var options = {
+			animationEnabled: true,
+			title: {
+				text: "Movie distribution over time."
+			},
+			axisY: {
+				title: "Number of movies",
+				includeZero: false
+			},
+			axisX: {
+				title: "Year Range"
+			},
+			data: [{
+				type: "column",
+				dataPoints: dataPoints
+			}]
+		};
+		$("#chartContainer").CanvasJSChart(options);
+
+	}
+</script>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+
+
+@section Scripts {
+	<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+	<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+}

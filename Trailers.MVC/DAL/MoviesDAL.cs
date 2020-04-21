@@ -10,7 +10,12 @@ namespace Trailers.MVC.DAL
 { 
     public class MoviesDAL
     {
-        private string _connectionString = "Server=NODA;Database=AwesomeProject;User Id=AwesomeUser;Password=123qwe;";
+        private string _connectionString;
+
+        public MoviesDAL(string connectionString)
+        {
+            _connectionString = connectionString;
+        }
 
         public bool AddMovie(Movie  movie)
         {
@@ -127,7 +132,7 @@ namespace Trailers.MVC.DAL
                                     " FROM Movies                               " +
                                     " LEFT JOIN Favorites                       " +
                                     "     ON Movies.ID = Favorites.MovieId      " +
-                                    "         AND Favorites.Email = @Email;     ";
+                                    "         AND Favorites.Email = @Email     ";
 
             commandText += searchParameter;
 
@@ -153,12 +158,37 @@ namespace Trailers.MVC.DAL
                         PosterUrl = row["PosterUrl"].ToString(),
                         TrailerUrl = row["TrailerUrl"].ToString(),
                         ApiID = int.Parse(row["ApiID"].ToString()),
-                        //IsFavorite = bool.Parse(row["IsFavorite"].ToString())
+                        IsFavorite = bool.Parse(row["IsFavorite"].ToString())
                     };
                     movies.Add(movie);
                 }
             }
             return movies;
+        }
+
+        public List<DataPoint> GetDataPoints()
+        {
+            string commandText = " EXEC GetGraphData";
+
+            SqlConnection connection = new SqlConnection(_connectionString);
+            SqlCommand command = new SqlCommand(commandText, connection as SqlConnection);
+
+            List<DataPoint> result = new List<DataPoint>();
+            using (var adapter = new SqlDataAdapter(command))
+            {
+                var resultTable = new DataTable();
+                adapter.Fill(resultTable);
+
+                foreach (var row in resultTable.AsEnumerable())
+                {
+                    var label = $"[{row["MinYear"]} -  {row["MaxYear"]})";
+                    int.TryParse(row["MovieCount"].ToString(), out int movieCount);
+
+                    result.Add(new DataPoint(label, movieCount));
+                }
+            }
+
+            return result;
         }
 
         internal Movie GetMovieByApiId(int apiID)
@@ -167,7 +197,7 @@ namespace Trailers.MVC.DAL
         }
 
         public Movie GetMovie(int id) => 
-            this.ListMovies(searchParameter : $" WHERE ID = {id}")
+            this.ListMovies(searchParameter : $" WHERE Movies.ID = {id}")
             .First();
 
         private int runQuery(string commandText)
